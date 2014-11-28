@@ -57,7 +57,7 @@ public class HttpHandler
       String[] body =  bodyVect.toArray(new String[bodyVect.size()]);
 
       // feed all this into a HttpRequest object
-      httpReq = new HttpRequest(initReqLine, headers, body);
+      this.httpReq = new HttpRequest(initReqLine, headers, body);
       System.out.println(httpReq);
 
       in.close();
