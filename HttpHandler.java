@@ -62,7 +62,7 @@ public class HttpHandler
 
       // feed all this into a HttpRequest object
       this.httpReq = new HttpRequest(initReqLine, headers, body);
-      System.out.println(httpReq);
+      System.out.print(httpReq);
 
     }
     catch(IOException e)
@@ -78,6 +78,7 @@ public class HttpHandler
     {
       PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
       this.httpResp = new HttpResponse(this.httpReq);
+      System.out.println(this.httpResp);
       String[] response = this.httpResp.getResponse();
       for(int i = 0; i < response.length; i++)
       {

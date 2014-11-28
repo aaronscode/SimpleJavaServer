@@ -23,7 +23,8 @@ public class SimpleJavaServer
       System.exit(1);
     }
     // everything went well, print message indicating server port
-    System.out.println("Server opened on port " + this.portNumber + ". Waiting for requests . . . ");
+    System.out.println("Server opened on port " + this.portNumber + ". Waiting for requests... ");
+    System.out.println();
   }
 
   // default port num is 80 for http
