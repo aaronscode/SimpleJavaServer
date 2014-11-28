@@ -41,14 +41,18 @@ public class HttpHandler
       {
         headersVect.add(line);
         line = in.readLine();
+
       }
       headersVect.trimToSize();
       String[] headers = headersVect.toArray(new String[headersVect.size()]);
 
       // read body of request
       Vector<String> bodyVect = new Vector<String>(10,5); 
-      line = in.readLine();
-      while(in.ready() && line!= null)
+      if(in.ready())
+      {
+        line = in.readLine();
+      }
+      while(in.ready() && line != null)
       {
         bodyVect.add(line);
         line = in.readLine();
@@ -60,7 +64,6 @@ public class HttpHandler
       this.httpReq = new HttpRequest(initReqLine, headers, body);
       System.out.println(httpReq);
 
-      in.close();
     }
     catch(IOException e)
     {
@@ -74,6 +77,12 @@ public class HttpHandler
     try
     {
       PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+      this.httpResp = new HttpResponse(this.httpReq);
+      String[] response = this.httpResp.getResponse();
+      for(int i = 0; i < response.length; i++)
+      {
+        out.print(response[i]);
+      }
       out.close();
     }
     catch(IOException e)

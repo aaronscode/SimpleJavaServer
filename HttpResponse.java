@@ -1,36 +1,33 @@
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 public class HttpResponse
 {
-	private PrintWriter out;
-
 	private final String HTTP_VERSION = "HTTP/1.1";
 	private String statusLine;
 
 	private boolean hasBody;
 
-	public HttpResponse(HttpRequest req, PrintWriter out)
+	public HttpResponse(HttpRequest req)
 	{
-		this.out = out;
-		
 		// try to make a file from req.
 	}
 
-	public HttpResponse(int statusCode, PrintWriter out)
+	public HttpResponse(int statusCode)
 	{
 		this.setStatusLine(statusCode);
 	}
 
-	public void respond()
+	public String[] getResponse()
 	{
-		// print statusline
-		
-		/*
-		 * for(int i = 0; i < headers.length; i++)
-		 * {
-		 *	// print headers
-		 * }
-		 */
+    String[] response = new String[5];
+    response[0] = "HTTP/1.1 200 OK\n";
+    response[1] = "Date: " + getServerTime() + "\n";
+    response[2] = "Connection: close\n";
+    response[3] = "\n";
+    response[4] = "<html><head><title>An Example Page</title></head><body>Hello World, this is a very simple HTML document.</body></html>\n";
 
-		// output raw bytestream
+    return response;
 	}
 
 	public void setStatusLine(int statusCode)
@@ -49,16 +46,20 @@ public class HttpResponse
 		{
 			case 200:
 				return "OK";
-				break;
 			case 404:
 				return "Not Found";
-				break;
 			case 500:
 				return "Server Error";
-				break;
 			default:
 				return "Unknown Status";
-				break;
 		}
 	}
+
+  private String getServerTime() {
+    Calendar calendar = Calendar.getInstance();
+    SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
+    dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+    return dateFormat.format(calendar.getTime());
+  }
+
 }

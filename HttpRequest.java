@@ -45,15 +45,15 @@ public class HttpRequest
 
   public String toString()
   {
-    String retval = this.initalRequestLine;
-    for(int i = 0; i < this.headers.length(); i++)
+    String retval = this.initalRequestLine + "\n";
+    for(int i = 0; i < this.headers.length; i++)
     {
       retval += this.headers[i] + "\n";
     }
 
     retval += "\n";
     
-    for(int i = 0; i < this.body.length(); i++)
+    for(int i = 0; i < this.body.length; i++)
     {
       retval += this.body[i] + "\n";
     }

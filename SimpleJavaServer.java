@@ -37,6 +37,7 @@ public class SimpleJavaServer
     HttpHandler requestHandler =  new HttpHandler(this.serverSocket);
     requestHandler.processRequest();
     requestHandler.respond();
+    requestHandler.close();
   }
 
   public int portNumber()
