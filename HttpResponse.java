@@ -19,40 +19,58 @@ public class HttpResponse
     {
       try
       {
-        this.inFile = new Scanner(new File(serverRoot + req.rewrittenResLocation()));
-        if(inFile.hasNext())
-        {
-          body = inFile.nextLine();
-          while(inFile.hasNext())
-          {
-            this.body += inFile.nextLine();
-          }
-        }
-        else 
-          this.body = "";
-
+        this.body = this.makeBody(req.rewrittenResLocation());
         setStatusLine(200);
         this.hasBody = true;
       }
-      catch(FileNotFoundException e)
+      catch(FileNotFoundException e) // file was not found
       {
+        try // to make an error page using the 404.html file
+        {
+          this.body = this.makeBody("/404.html");
+        } 
+        catch(FileNotFoundException e2) 
+        {
+          // 404.html not found, we're really out of luck at this point
+          this.body = "404 Page Not Found"; // plaintext error message
+        }
         setStatusLine(404);
-        this.body = "404 File not found";
         this.hasBody = true;
       }
     }
-    else
+    else // http request was not considered valid
     {
+      try // to make an error page using 500.html
+      {
+        this.body = this.makeBody("/500.html");
+      } 
+      catch(FileNotFoundException e)
+      {
+        // 500.html not found, we're really out of luck at this point
+        this.body = "500 Internal Server Error";
+      }
       setStatusLine(500);
-      this.body = "500 Internal server error";
       this.hasBody = true;
     }
 	}
 
-	public HttpResponse(int statusCode)
-	{
-		this.setStatusLine(statusCode);
-	}
+  private String makeBody(String resLoc) throws FileNotFoundException
+  {
+    String body = null;
+    this.inFile = new Scanner(new File(serverRoot + resLoc));
+    if(inFile.hasNext())
+    {
+      body = inFile.nextLine();
+      while(inFile.hasNext())
+      {
+        body += inFile.nextLine();
+      }
+    }
+    else 
+      body = "";
+
+    return body;
+  }
 
 	public String[] getResponse()
 	{
