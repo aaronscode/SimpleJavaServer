@@ -1,3 +1,15 @@
+/**
+ * @author Aaron Gross
+ *
+ * TODO:
+ * % 404 and 500 error code pages
+ * % move output from Http Handler to HttpResponse
+ * % convert output from string to raw bytes to acomodate non-text transmissions
+ *   -Possibly use buffe
+ * % add support for .config
+ * % add support for toggling debug output
+ */
+
 import java.util.*;
 import java.text.SimpleDateFormat;
 import java.net.*;

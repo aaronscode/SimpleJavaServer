@@ -37,13 +37,15 @@ public class HttpResponse
       catch(FileNotFoundException e)
       {
         setStatusLine(404);
-        this.hasBody = false;
+        this.body = "404 File not found";
+        this.hasBody = true;
       }
     }
     else
     {
       setStatusLine(500);
-      this.hasBody = false;
+      this.body = "500 Internal server error";
+      this.hasBody = true;
     }
 	}
 
