@@ -3,18 +3,16 @@
  *
  * TODO:
  * % mod rewrite rules to allow for omission of .html
- * % move output from Http Handler to HttpResponse
+ * % move output from HttpHandler to HttpResponse
  * % convert output from string to raw bytes to acomodate non-text transmissions
- *   -Possibly use buffe
+ *   -Possibly use buffer
  * % add support for .config
  * % add support for toggling debug output
  * % format and comment code
  */
 
-import java.util.*;
-import java.text.SimpleDateFormat;
-import java.net.*;
 import java.io.*;
+import java.net.*;
 
 public class SimpleJavaServer
 {
