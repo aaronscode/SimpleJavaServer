@@ -3,9 +3,6 @@
  *
  * TODO:
  * % mod rewrite rules to allow for omission of .html
- * % move output from HttpHandler to HttpResponse
- * % convert output from string to raw bytes to acomodate non-text transmissions
- *   -Possibly use buffer
  * % add support for .config
  * % add support for toggling debug output
  * % format and comment code

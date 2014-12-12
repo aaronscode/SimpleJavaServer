@@ -6,58 +6,90 @@ public class HttpResponse
 {
 	private final String HTTP_VERSION = "HTTP/1.1";
 	private String statusLine;
-  private String serverRoot = "./content"; // TODO maybe read this from a .config
+  private String contentRoot = "./content"; // TODO maybe read this from a .config
 
-  private Scanner inFile = null;
-	private boolean hasBody;
-  private String body = null;
+  private int buffSize = 1024 * 8; // buffers of 1024 bytes * 8 = 8kb
+  private BufferedInputStream bis;
+  private BufferedOutputStream bos;
+  private byte[] readData = new byte[buffSize];
 
-	public HttpResponse(HttpRequest req)
-	{
-		// try to make a file from req.
+	public HttpResponse(OutputStream outStream, HttpRequest req)
+  {
+    bos = new BufferedOutputStream(outStream, buffSize);
+
+    // try to make a file from req.
     if(req.isValid())
     {
       try
       {
-        this.body = this.makeBody(req.rewrittenResLocation());
+        this.bis = getResBuff(req.rewrittenResLocation());
         setStatusLine(200);
-        this.hasBody = true;
       }
-      catch(FileNotFoundException e) // file was not found
+      catch(FileNotFoundException FnF) // file was not found
       {
         try // to make an error page using the 404.html file
         {
-          this.body = this.makeBody("/404.html");
-        } 
-        catch(FileNotFoundException e2) 
-        {
-          // 404.html not found, we're really out of luck at this point
-          this.body = "404 Page Not Found"; // plaintext error message
+          this.bis = getResBuff("/404.html");
         }
-        setStatusLine(404);
-        this.hasBody = true;
-      }
-    }
-    else // http request was not considered valid
-    {
-      try // to make an error page using 500.html
-      {
-        this.body = this.makeBody("/500.html");
-      } 
-      catch(FileNotFoundException e)
-      {
-        // 500.html not found, we're really out of luck at this point
-        this.body = "500 Internal Server Error";
-      }
-      setStatusLine(500);
-      this.hasBody = true;
-    }
-	}
+        catch(FileNotFoundException FnF2)
+        {
+          this.bis = null;
+        }
 
+        setStatusLine(404);
+      }
+    }
+    else // http request was not considered valid 
+    {
+      try // to make an error page using 500.html 
+      {
+        this.bis = getResBuff("/500.html");
+      }
+      catch(FileNotFoundException e)
+      { // 500.html not found, we're really out of luck at this point
+        this.bis = null;
+      }
+
+      setStatusLine(500);
+    }
+  }
+
+  private BufferedInputStream getResBuff(String resLocation) throws FileNotFoundException
+  {
+    FileInputStream fis = new FileInputStream(contentRoot + resLocation);
+    return new BufferedInputStream(fis, buffSize);
+  }
+
+  public void respond()
+  {
+    try {
+    String statusLineCr = this.statusLine + "\n";
+    String dateHeader = "Date: " + getServerTime() + "\n";
+    String connectionStatus = "Connection: close\n";
+    this.bos.write(statusLineCr.getBytes(), 0, statusLineCr.length());
+    this.bos.write(dateHeader.getBytes(), 0, dateHeader.length());
+    this.bos.write(connectionStatus.getBytes(), 0, connectionStatus.length());
+    this.bos.write("\n".getBytes(), 0, 1);
+
+    while(bis.available() != 0)
+    {
+      this.bis.read(readData, 0, buffSize);
+      this.bos.write(readData, 0, buffSize); // TODO finsish line
+    }
+    this.bis.close();
+    this.bos.close();
+    }
+    catch(IOException e)
+    {
+      
+    }
+  }
+
+  /**
   private String makeBody(String resLoc) throws FileNotFoundException
   {
     String body = null;
-    this.inFile = new Scanner(new File(serverRoot + resLoc));
+    this.inFile = new Scanner(new File(contentRoot + resLoc));
     if(inFile.hasNext())
     {
       body = inFile.nextLine();
@@ -86,6 +118,7 @@ public class HttpResponse
 
     return response;
 	}
+  */
 
   public String statusLine()
   {
@@ -126,10 +159,6 @@ public class HttpResponse
 
   public String toString()
   {
-    String response[] = getResponse();
-    String retval = "Response:\n";
-    retval += response[0];
-    retval += response[1];
-    return retval;
+    return "response served";
   }
 }

@@ -76,15 +76,9 @@ public class HttpHandler
   {
     try
     {
-      PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-      this.httpResp = new HttpResponse(this.httpReq);
+      this.httpResp = new HttpResponse(clientSocket.getOutputStream(), this.httpReq);
       System.out.println(this.httpResp);
-      String[] response = this.httpResp.getResponse();
-      for(int i = 0; i < response.length; i++)
-      {
-        out.print(response[i]);
-      }
-      out.close();
+      this.httpResp.respond();
     }
     catch(IOException e)
     {
