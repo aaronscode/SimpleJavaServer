@@ -2,6 +2,8 @@
  * @author Aaron Gross
  *
  * TODO:
+ * % fix output - currenlt outputs garbage bytes at the end of file
+ *  -this screws up javascript, so currently it is not working
  * % mod rewrite rules to allow for omission of .html
  * % add support for .config
  * % add support for toggling debug output
